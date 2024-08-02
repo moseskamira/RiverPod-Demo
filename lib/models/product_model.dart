@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'product_model.g.dart';
+
+@JsonSerializable()
 class ProductModel {
   int? id;
   String? title;
@@ -44,87 +49,13 @@ class ProductModel {
       this.thumbnail,
       this.images});
 
-  ProductModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    description = json['description'];
-    category = json['category'];
-    price = json['price'];
-    discountPercentage = json['discountPercentage'];
-    rating = json['rating'];
-    stock = json['stock'];
-    tags = json['tags'].cast<String>();
-    brand = json['brand'];
-    sku = json['sku'];
-    weight = json['weight'];
-    warrantyInformation = json['warrantyInformation'];
-    shippingInformation = json['shippingInformation'];
-    availabilityStatus = json['availabilityStatus'];
-    if (json['reviews'] != null) {
-      reviews = <Reviews>[];
-      json['reviews'].forEach((v) {
-        reviews!.add(new Reviews.fromJson(v));
-      });
-    }
-    returnPolicy = json['returnPolicy'];
-    minimumOrderQuantity = json['minimumOrderQuantity'];
-    meta = json['meta'] != null ? new Meta.fromJson(json['meta']) : null;
-    thumbnail = json['thumbnail'];
-    images = json['images'].cast<String>();
-  }
+  factory ProductModel.fromJson(Map<String, dynamic> json) =>
+      _$ProductModelFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['category'] = this.category;
-    data['price'] = this.price;
-    data['discountPercentage'] = this.discountPercentage;
-    data['rating'] = this.rating;
-    data['stock'] = this.stock;
-    data['tags'] = this.tags;
-    data['brand'] = this.brand;
-    data['sku'] = this.sku;
-    data['weight'] = this.weight;
-    data['warrantyInformation'] = this.warrantyInformation;
-    data['shippingInformation'] = this.shippingInformation;
-    data['availabilityStatus'] = this.availabilityStatus;
-    if (this.reviews != null) {
-      data['reviews'] = this.reviews!.map((v) => v.toJson()).toList();
-    }
-    data['returnPolicy'] = this.returnPolicy;
-    data['minimumOrderQuantity'] = this.minimumOrderQuantity;
-    if (this.meta != null) {
-      data['meta'] = this.meta!.toJson();
-    }
-    data['thumbnail'] = this.thumbnail;
-    data['images'] = this.images;
-    return data;
-  }
+  Map<String, dynamic> toJson() => _$ProductModelToJson(this);
 }
 
-class Dimensions {
-  double? width;
-  double? height;
-  double? depth;
 
-  Dimensions({this.width, this.height, this.depth});
-
-  Dimensions.fromJson(Map<String, dynamic> json) {
-    width = json['width'];
-    height = json['height'];
-    depth = json['depth'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['width'] = this.width;
-    data['height'] = this.height;
-    data['depth'] = this.depth;
-    return data;
-  }
-}
 
 class Reviews {
   int? rating;

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "663637680212",
+    "project_id": "riverpod-fb9e2",
+    "storage_bucket": "riverpod-fb9e2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663637680212:android:a27eab83ca8687a5254dc1",
+        "android_client_info": {
+          "package_name": "com.example.riverpod_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFMoSoNRbM7TEWEvAPQVdaRXHH58vkPb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
