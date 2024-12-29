@@ -20,19 +20,5 @@ final productsProvider = AutoDisposeFutureProvider<List>.internal(
 );
 
 typedef ProductsRef = AutoDisposeFutureProviderRef<List>;
-String _$currentUsersHash() => r'76ec8da6226c4f95910be93f7a9dbefb5b042937';
-
-/// See also [currentUsers].
-@ProviderFor(currentUsers)
-final currentUsersProvider = AutoDisposeFutureProvider<List>.internal(
-  currentUsers,
-  name: r'currentUsersProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$currentUsersHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef CurrentUsersRef = AutoDisposeFutureProviderRef<List>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
