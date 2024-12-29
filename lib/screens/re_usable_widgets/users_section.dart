@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_project/screens/re_usable_widgets/user_card.dart';
+import 'package:riverpod_project/screens/user_details_screen.dart';
 
 import '../../providers/user/user_stream_provider.dart';
 
@@ -28,33 +30,18 @@ class _UsersSectionState extends ConsumerState<UsersSection> {
                         color: Colors.transparent,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              const Text('FirstName: '),
-                              Text(user.firstName ?? ''),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Text('LastName: '),
-                              Text(user.lastName ?? ''),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Text('Date of Birth: '),
-                              Text(user.dob ?? ''),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Text('Gender: '),
-                              Text(user.gender ?? ''),
-                            ],
-                          ),
-                        ],
+                      child: GestureDetector(
+                        onTap: () {
+                          if (user.userId != null) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    UserDetailsScreen(user.userId!),
+                              ),
+                            );
+                          }
+                        },
+                        child: UserCard(user: user),
                       ),
                     ),
                   )
