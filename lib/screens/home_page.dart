@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_project/providers/navigation_notifier.dart';
 import 'package:riverpod_project/screens/dashboard_container.dart';
 import 'package:riverpod_project/screens/orders_container.dart';
+
 import '../providers/product_provider.dart';
-import 'account_container.dart';
+import 'user_container.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -33,7 +34,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: [
         const DashboardContainer(),
         const OrdersContainer(),
-        const AccountContainer()
+        const UserContainer()
       ][index],
       bottomNavigationBar: NavigationBar(
         destinations: const [
@@ -50,7 +51,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           NavigationDestination(
             selectedIcon: Icon(Icons.person),
             icon: Icon(Icons.person_2_outlined),
-            label: 'Account',
+            label: 'User',
           ),
         ],
         selectedIndex: index,

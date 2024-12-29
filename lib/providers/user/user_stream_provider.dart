@@ -13,6 +13,7 @@ final userStreamProvider = StreamProvider.autoDispose<List<User>>((ref) {
 
   final sub = FirebaseFirestore.instance
       .collection('users')
+      .orderBy('firstName', descending: false)
       .snapshots()
       .listen((snapshot) {
     if (snapshot.docs.isNotEmpty) {

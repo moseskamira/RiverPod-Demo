@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_project/models/user.dart';
 
-part '../current_user_provider.g.dart';
-
 @riverpod
 List<User> currentUsers(ref) {
   List<User> users = [];
