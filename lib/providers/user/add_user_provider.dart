@@ -20,7 +20,6 @@ class _AddUserNotifier extends StateNotifier<bool> {
         });
       });
     } catch (_) {}
-
     state = false;
   }
 
@@ -30,18 +29,4 @@ class _AddUserNotifier extends StateNotifier<bool> {
 final newAddUserProvider = StateNotifierProvider<_AddUserNotifier, bool>((ref) {
   final notifier = _AddUserNotifier();
   return notifier;
-});
-
-final addUserProvider =
-    FutureProvider.autoDispose.family((ref, User user) async {
-  final fireStore = FirebaseFirestore.instance;
-  final docRef = fireStore.collection('users').doc();
-  fireStore.runTransaction((transaction) async {
-    transaction.set(docRef, {
-      'firstName': user.firstName,
-      'lastName': user.lastName,
-      'gender': user.gender,
-      'dob': user.dob,
-    });
-  });
 });

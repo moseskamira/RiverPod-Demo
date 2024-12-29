@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:riverpod_project/models/product_model.dart';
-import '../app_routes/route_path.dart';
-import '../providers/product_provider.dart';
 
 class OrdersContainer extends ConsumerStatefulWidget {
   const OrdersContainer({super.key});

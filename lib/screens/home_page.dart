@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_project/providers/navigation_notifier.dart';
-import 'package:riverpod_project/screens/dashboard_container.dart';
 import 'package:riverpod_project/screens/orders_container.dart';
+import 'package:riverpod_project/screens/products_container.dart';
 
-import '../providers/product_provider.dart';
+import '../providers/product/product_provider.dart';
 import 'user_container.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -23,7 +23,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final index = ref.watch(appNavigationNotifierProvider) as int;
-    final productsFuture = ref.watch(productsProvider);
+    ref.watch(productsProvider);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -32,7 +32,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         centerTitle: true,
       ),
       body: [
-        const DashboardContainer(),
+        const ProductsContainer(),
         const OrdersContainer(),
         const UserContainer()
       ][index],
@@ -41,12 +41,12 @@ class _HomePageState extends ConsumerState<HomePage> {
           NavigationDestination(
             selectedIcon: Icon(Icons.home),
             icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            label: 'Product',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.sd_card_alert_sharp),
             icon: Icon(Icons.sd_card_alert_sharp),
-            label: 'Orders',
+            label: 'Order',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.person),
