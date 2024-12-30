@@ -13,13 +13,13 @@ class AddUserSection extends ConsumerStatefulWidget {
 }
 
 class _AddUserSectionState extends ConsumerState<AddUserSection> {
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final User user = User();
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _formkey,
+      key: _formKey,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -38,7 +38,9 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                 // code when the user saves the form.
               },
               validator: (String? value) {
-                return value!.contains('@') ? 'Do not use the @ char.' : null;
+                return value == null || value.isEmpty
+                    ? 'Provide missing field'
+                    : null;
               },
             ),
             TextFormField(
@@ -54,7 +56,9 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                 // code when the user saves the form.
               },
               validator: (String? value) {
-                return value!.contains('@') ? 'Do not use the @ char.' : null;
+                return value == null || value.isEmpty
+                    ? 'Provide missing field'
+                    : null;
               },
             ),
             TextFormField(
@@ -70,7 +74,9 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                 // code when the user saves the form.
               },
               validator: (String? value) {
-                return value!.contains('@') ? 'Do not use the @ char.' : null;
+                return value == null || value.isEmpty
+                    ? 'Provide missing field'
+                    : null;
               },
             ),
             TextFormField(
@@ -86,21 +92,21 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                 // code when the user saves the form.
               },
               validator: (String? value) {
-                return value!.contains('@') ? 'Do not use the @ char.' : null;
+                return value == null || value.isEmpty
+                    ? 'Provide missing field'
+                    : null;
               },
             ),
             InkWell(
               onTap: () {
-                if (_formkey.currentState!.validate()) {
-                  ref.read(newAddUserProvider.notifier).postUser(user);
-                  print('USERFNAMEIS: ${user.firstName}');
-                  print('FORMVALID');
+                if (_formKey.currentState!.validate()) {
+                  ref.read(addUserProvider.notifier).postUser(user);
                 }
               },
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  'Save',
+                  'Save User',
                   style: GoogleFonts.poppins(
                       fontSize: 24,
                       fontWeight: FontWeight.w500,

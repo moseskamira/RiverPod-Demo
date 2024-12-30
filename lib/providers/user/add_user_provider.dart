@@ -26,7 +26,7 @@ class _AddUserNotifier extends StateNotifier<bool> {
   bool get loading => state;
 }
 
-final newAddUserProvider = StateNotifierProvider<_AddUserNotifier, bool>((ref) {
+final addUserProvider = StateNotifierProvider<_AddUserNotifier, bool>((ref) {
   final notifier = _AddUserNotifier();
   return notifier;
 });

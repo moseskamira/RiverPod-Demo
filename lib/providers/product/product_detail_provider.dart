@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:riverpod_project/models/product_model.dart';
-import 'api_service_provider.dart';
+
+import '../api_service_provider.dart';
 
 part 'product_detail_provider.g.dart';
 

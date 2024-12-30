@@ -20,10 +20,6 @@ class _UserContainerState extends ConsumerState<UserContainer> {
     super.initState();
   }
 
-  String returnDocValue(DocumentSnapshot document, String property) {
-    return document[property];
-  }
-
   updatingDocument(DocumentSnapshot document) {
     FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot freshSnapShot =
