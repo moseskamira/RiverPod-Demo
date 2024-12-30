@@ -11,8 +11,6 @@ class _UsersNotifier extends StateNotifier<List<User>> {
   Future<void> setAll(List<User> users, bool loadingValue) async {
     state = users;
     isLoading = loadingValue;
-    print('LOADINGVALUE: $loadingValue');
-    print('IAMLISTENINGKAMIRA:${state.first.toJson()}');
   }
 
   List<User> get getUsers => state;

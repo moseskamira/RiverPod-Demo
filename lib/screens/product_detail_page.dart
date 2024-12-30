@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_project/models/product_model.dart';
-import 'package:riverpod_project/providers/product_detail_provider.dart';
+import 'package:riverpod_project/providers/product/product_detail_provider.dart';
 
 class ProductDetailPage extends ConsumerStatefulWidget {
   final String id;
@@ -31,17 +31,20 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-              ),
-              color: Colors.white),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            color: Colors.white,
+          ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: FutureBuilder(
-              future: ref.watch(productDetailProvider(widget.id)),
+              future: ref.watch(productDetailProvider(widget.id).future),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else {
                   if (snapshot.hasData) {
                     var productModel = snapshot.data as ProductModel;
                     return Column(
@@ -52,8 +55,6 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                   } else {
                     throw Exception('');
                   }
-                } else {
-                  return const Center(child: CircularProgressIndicator());
                 }
               },
             ),

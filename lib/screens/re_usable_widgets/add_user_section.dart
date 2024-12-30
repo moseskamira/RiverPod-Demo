@@ -1,7 +1,9 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:riverpod_project/providers/user/add_user_provider.dart';
+import 'package:riverpod_project/utils/reusable_functions.dart';
 
 import '../../models/user.dart';
 
@@ -13,13 +15,13 @@ class AddUserSection extends ConsumerStatefulWidget {
 }
 
 class _AddUserSectionState extends ConsumerState<AddUserSection> {
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final User user = User();
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _formkey,
+      key: _formKey,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -38,7 +40,9 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                 // code when the user saves the form.
               },
               validator: (String? value) {
-                return value!.contains('@') ? 'Do not use the @ char.' : null;
+                return value == null || value.isEmpty
+                    ? 'Provide missing field'
+                    : null;
               },
             ),
             TextFormField(
@@ -54,7 +58,9 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                 // code when the user saves the form.
               },
               validator: (String? value) {
-                return value!.contains('@') ? 'Do not use the @ char.' : null;
+                return value == null || value.isEmpty
+                    ? 'Provide missing field'
+                    : null;
               },
             ),
             TextFormField(
@@ -70,7 +76,9 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                 // code when the user saves the form.
               },
               validator: (String? value) {
-                return value!.contains('@') ? 'Do not use the @ char.' : null;
+                return value == null || value.isEmpty
+                    ? 'Provide missing field'
+                    : null;
               },
             ),
             TextFormField(
@@ -86,28 +94,42 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                 // code when the user saves the form.
               },
               validator: (String? value) {
-                return value!.contains('@') ? 'Do not use the @ char.' : null;
+                return value == null || value.isEmpty
+                    ? 'Provide missing field'
+                    : null;
               },
             ),
-            InkWell(
-              onTap: () {
-                if (_formkey.currentState!.validate()) {
-                  ref.read(newAddUserProvider.notifier).postUser(user);
-                  print('USERFNAMEIS: ${user.firstName}');
-                  print('FORMVALID');
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  'Save',
-                  style: GoogleFonts.poppins(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.blue),
-                ),
-              ),
-            )
+            ref.read(addUserProvider.notifier).loading
+                ? const Center(child: CircularProgressIndicator())
+                : InkWell(
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        final resp =
+                            ref.read(addUserProvider.notifier).postUser(user);
+                        if (resp.isNotEmpty) {
+                          final snackBar = ReUsableFunctions.awesomeSnackBar(
+                              'User added successfully',
+                              resp,
+                              ContentType.success,
+                              context);
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(snackBar);
+                          //_formKey.currentState!.reset();
+                        }
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Text(
+                        'Save User',
+                        style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.blue),
+                      ),
+                    ),
+                  )
           ],
         ),
       ),

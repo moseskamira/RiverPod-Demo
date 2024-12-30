@@ -17,8 +17,9 @@ final userStreamProvider = StreamProvider.autoDispose<List<User>>((ref) {
       .snapshots()
       .listen((snapshot) {
     if (snapshot.docs.isNotEmpty) {
-      List<User> myList =
-          snapshot.docs.map((doc) => User.fromJson(doc.data())).toList();
+      List<User> myList = snapshot.docs.map((doc) {
+        return User.fromJson({...doc.data(), 'userId': doc.id});
+      }).toList();
       controller.sink.add(myList);
     }
   });
