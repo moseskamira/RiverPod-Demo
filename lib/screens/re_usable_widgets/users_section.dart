@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:riverpod_project/screens/re_usable_widgets/user_card.dart';
-import 'package:riverpod_project/screens/user_details_screen.dart';
 
+import '../../app_routes/route_path.dart';
 import '../../providers/user/user_stream_provider.dart';
 
 class UsersSection extends ConsumerStatefulWidget {
@@ -34,13 +35,9 @@ class _UsersSectionState extends ConsumerState<UsersSection> {
                           ),
                           child: GestureDetector(
                             onTap: () {
-                              if (user.userId != null) {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        UserDetailsScreen(user.userId!),
-                                  ),
-                                );
+                              if (user.userId != null && context.mounted) {
+                                context.push(RoutePath.userDetailsView,
+                                    extra: {'userId': user.userId!});
                               }
                             },
                             child: UserCard(user: user),
