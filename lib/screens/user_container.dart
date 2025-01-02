@@ -49,7 +49,7 @@ class _UserContainerState extends ConsumerState<UserContainer> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -61,7 +61,7 @@ class _UserContainerState extends ConsumerState<UserContainer> {
                     child: Text(
                       'Add User',
                       style: GoogleFonts.poppins(
-                          fontSize: 24,
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
                           color: Colors.blue),
                     ),
@@ -74,7 +74,7 @@ class _UserContainerState extends ConsumerState<UserContainer> {
                     child: Text(
                       'View Users',
                       style: GoogleFonts.poppins(
-                          fontSize: 24,
+                          fontSize: 20,
                           fontWeight: FontWeight.w500,
                           color: Colors.blue),
                     ),

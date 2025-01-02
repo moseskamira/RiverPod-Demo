@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'product_detail_provider.dart';
+part of 'delete_user_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$productDetailHash() => r'3ee2565a89d1d528f3ef99f4a181f8557ae5c714';
+String _$deleteUserHash() => r'cab497aa48c53480f20e2b1697025d57edb5bd82';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,30 +29,30 @@ class _SystemHash {
   }
 }
 
-/// See also [productDetail].
-@ProviderFor(productDetail)
-const productDetailProvider = ProductDetailFamily();
+/// See also [deleteUser].
+@ProviderFor(deleteUser)
+const deleteUserProvider = DeleteUserFamily();
 
-/// See also [productDetail].
-class ProductDetailFamily extends Family<AsyncValue<ProductModel>> {
-  /// See also [productDetail].
-  const ProductDetailFamily();
+/// See also [deleteUser].
+class DeleteUserFamily extends Family<String> {
+  /// See also [deleteUser].
+  const DeleteUserFamily();
 
-  /// See also [productDetail].
-  ProductDetailProvider call(
-    String prodId,
+  /// See also [deleteUser].
+  DeleteUserProvider call(
+    String docId,
   ) {
-    return ProductDetailProvider(
-      prodId,
+    return DeleteUserProvider(
+      docId,
     );
   }
 
   @override
-  ProductDetailProvider getProviderOverride(
-    covariant ProductDetailProvider provider,
+  DeleteUserProvider getProviderOverride(
+    covariant DeleteUserProvider provider,
   ) {
     return call(
-      provider.prodId,
+      provider.docId,
     );
   }
 
@@ -68,91 +68,91 @@ class ProductDetailFamily extends Family<AsyncValue<ProductModel>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'productDetailProvider';
+  String? get name => r'deleteUserProvider';
 }
 
-/// See also [productDetail].
-class ProductDetailProvider extends FutureProvider<ProductModel> {
-  /// See also [productDetail].
-  ProductDetailProvider(
-    String prodId,
+/// See also [deleteUser].
+class DeleteUserProvider extends Provider<String> {
+  /// See also [deleteUser].
+  DeleteUserProvider(
+    String docId,
   ) : this._internal(
-          (ref) => productDetail(
-            ref as ProductDetailRef,
-            prodId,
+          (ref) => deleteUser(
+            ref as DeleteUserRef,
+            docId,
           ),
-          from: productDetailProvider,
-          name: r'productDetailProvider',
+          from: deleteUserProvider,
+          name: r'deleteUserProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$productDetailHash,
-          dependencies: ProductDetailFamily._dependencies,
+                  : _$deleteUserHash,
+          dependencies: DeleteUserFamily._dependencies,
           allTransitiveDependencies:
-              ProductDetailFamily._allTransitiveDependencies,
-          prodId: prodId,
+              DeleteUserFamily._allTransitiveDependencies,
+          docId: docId,
         );
 
-  ProductDetailProvider._internal(
+  DeleteUserProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.prodId,
+    required this.docId,
   }) : super.internal();
 
-  final String prodId;
+  final String docId;
 
   @override
   Override overrideWith(
-    FutureOr<ProductModel> Function(ProductDetailRef provider) create,
+    String Function(DeleteUserRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: ProductDetailProvider._internal(
-        (ref) => create(ref as ProductDetailRef),
+      override: DeleteUserProvider._internal(
+        (ref) => create(ref as DeleteUserRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        prodId: prodId,
+        docId: docId,
       ),
     );
   }
 
   @override
-  FutureProviderElement<ProductModel> createElement() {
-    return _ProductDetailProviderElement(this);
+  ProviderElement<String> createElement() {
+    return _DeleteUserProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is ProductDetailProvider && other.prodId == prodId;
+    return other is DeleteUserProvider && other.docId == docId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, prodId.hashCode);
+    hash = _SystemHash.combine(hash, docId.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin ProductDetailRef on FutureProviderRef<ProductModel> {
-  /// The parameter `prodId` of this provider.
-  String get prodId;
+mixin DeleteUserRef on ProviderRef<String> {
+  /// The parameter `docId` of this provider.
+  String get docId;
 }
 
-class _ProductDetailProviderElement extends FutureProviderElement<ProductModel>
-    with ProductDetailRef {
-  _ProductDetailProviderElement(super.provider);
+class _DeleteUserProviderElement extends ProviderElement<String>
+    with DeleteUserRef {
+  _DeleteUserProviderElement(super.provider);
 
   @override
-  String get prodId => (origin as ProductDetailProvider).prodId;
+  String get docId => (origin as DeleteUserProvider).docId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

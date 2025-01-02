@@ -6,7 +6,8 @@ import '../../models/user.dart';
 class _AddUserNotifier extends StateNotifier<bool> {
   _AddUserNotifier() : super(false);
 
-  postUser(User user) {
+  String postUser(User user) {
+    String successMsg = 'User Added Successfully';
     state = true;
     try {
       final fireStore = FirebaseFirestore.instance;
@@ -19,8 +20,11 @@ class _AddUserNotifier extends StateNotifier<bool> {
           'dob': user.dob,
         });
       });
-    } catch (_) {}
+    } catch (_) {
+      successMsg = 'An error occurred';
+    }
     state = false;
+    return successMsg;
   }
 
   bool get loading => state;

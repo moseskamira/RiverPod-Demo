@@ -18,38 +18,40 @@ class _UsersSectionState extends ConsumerState<UsersSection> {
     final usersStream = ref.watch(userStreamProvider);
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: usersStream.when(
-          data: (users) {
-            return Column(
-              children: users
-                  .map(
-                    (user) => Container(
-                      padding: const EdgeInsets.all(10),
-                      margin: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          if (user.userId != null) {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    UserDetailsScreen(user.userId!),
-                              ),
-                            );
-                          }
-                        },
-                        child: UserCard(user: user),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            );
-          },
-          error: (err, ms) => Text(err.toString()),
-          loading: () => const Center(child: CircularProgressIndicator())),
+      child: usersStream.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : usersStream.when(
+              data: (users) {
+                return Column(
+                  children: users
+                      .map(
+                        (user) => Container(
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: GestureDetector(
+                            onTap: () {
+                              if (user.userId != null) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        UserDetailsScreen(user.userId!),
+                                  ),
+                                );
+                              }
+                            },
+                            child: UserCard(user: user),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                );
+              },
+              error: (err, ms) => Text(err.toString()),
+              loading: () => const Center(child: CircularProgressIndicator())),
     );
   }
 }

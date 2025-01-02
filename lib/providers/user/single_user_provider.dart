@@ -5,7 +5,7 @@ import 'package:riverpod_project/providers/user/user_stream_provider.dart';
 import '../../models/user.dart';
 
 final singleUserProvider =
-    FutureProvider.autoDispose.family<User?, String>((ref, userId) {
+    Provider.autoDispose.family<User?, String>((ref, userId) {
   User? mUser;
   final usersStream = ref.watch(userStreamProvider);
   usersStream.when(
