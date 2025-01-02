@@ -21,8 +21,7 @@ class ApiService {
   }
 
   Future<ProductModel> getProductDetails(String id) async {
-    Response response =
-        await get(Uri.parse('$baseUrl${Apis.productDetails}$id'));
+    Response response = await get(Uri.parse('$baseUrl${Apis.products}/$id'));
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
       return ProductModel.fromJson(result);

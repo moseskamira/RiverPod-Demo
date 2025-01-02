@@ -55,10 +55,12 @@ class _DashboardContainerState extends ConsumerState<ProductsContainer> {
                                 padding: const EdgeInsets.all(10),
                                 child: GestureDetector(
                                   onTap: () {
-                                    context.push(RoutePath.productDetailsView,
-                                        extra: {
-                                          'prodId': product.id.toString()
-                                        });
+                                    if (context.mounted) {
+                                      context.push(RoutePath.productDetailsView,
+                                          extra: {
+                                            'prodId': product.id.toString()
+                                          });
+                                    }
                                   },
                                   child: ProductCard(product: product),
                                 ),

@@ -4,7 +4,6 @@ import 'package:riverpod_project/providers/navigation_notifier.dart';
 import 'package:riverpod_project/screens/orders_container.dart';
 import 'package:riverpod_project/screens/products_container.dart';
 
-import '../providers/product/product_provider.dart';
 import 'user_container.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -23,7 +22,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final index = ref.watch(appNavigationNotifierProvider) as int;
-    ref.watch(productsProvider);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -46,7 +44,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           NavigationDestination(
             selectedIcon: Icon(Icons.sd_card_alert_sharp),
             icon: Icon(Icons.sd_card_alert_sharp),
-            label: 'Order',
+            label: 'Orders',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.person),

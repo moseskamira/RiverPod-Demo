@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:riverpod_project/models/product_review_model.dart';
 
 part 'product_model.g.dart';
 
@@ -19,10 +20,9 @@ class ProductModel {
   String? warrantyInformation;
   String? shippingInformation;
   String? availabilityStatus;
-  List<Reviews>? reviews;
+  List<ProductReviewModel>? reviews;
   String? returnPolicy;
   int? minimumOrderQuantity;
-  Meta? meta;
   String? thumbnail;
   List<String>? images;
 
@@ -45,7 +45,6 @@ class ProductModel {
       this.reviews,
       this.returnPolicy,
       this.minimumOrderQuantity,
-      this.meta,
       this.thumbnail,
       this.images});
 
@@ -53,64 +52,4 @@ class ProductModel {
       _$ProductModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProductModelToJson(this);
-}
-
-
-
-class Reviews {
-  int? rating;
-  String? comment;
-  String? date;
-  String? reviewerName;
-  String? reviewerEmail;
-
-  Reviews(
-      {this.rating,
-      this.comment,
-      this.date,
-      this.reviewerName,
-      this.reviewerEmail});
-
-  Reviews.fromJson(Map<String, dynamic> json) {
-    rating = json['rating'];
-    comment = json['comment'];
-    date = json['date'];
-    reviewerName = json['reviewerName'];
-    reviewerEmail = json['reviewerEmail'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['rating'] = this.rating;
-    data['comment'] = this.comment;
-    data['date'] = this.date;
-    data['reviewerName'] = this.reviewerName;
-    data['reviewerEmail'] = this.reviewerEmail;
-    return data;
-  }
-}
-
-class Meta {
-  String? createdAt;
-  String? updatedAt;
-  String? barcode;
-  String? qrCode;
-
-  Meta({this.createdAt, this.updatedAt, this.barcode, this.qrCode});
-
-  Meta.fromJson(Map<String, dynamic> json) {
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    barcode = json['barcode'];
-    qrCode = json['qrCode'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['barcode'] = this.barcode;
-    data['qrCode'] = this.qrCode;
-    return data;
-  }
 }
