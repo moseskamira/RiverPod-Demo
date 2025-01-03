@@ -23,13 +23,10 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       shippingInformation: json['shippingInformation'] as String?,
       availabilityStatus: json['availabilityStatus'] as String?,
       reviews: (json['reviews'] as List<dynamic>?)
-          ?.map((e) => Reviews.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => ProductReviewModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       returnPolicy: json['returnPolicy'] as String?,
       minimumOrderQuantity: (json['minimumOrderQuantity'] as num?)?.toInt(),
-      meta: json['meta'] == null
-          ? null
-          : Meta.fromJson(json['meta'] as Map<String, dynamic>),
       thumbnail: json['thumbnail'] as String?,
       images:
           (json['images'] as List<dynamic>?)?.map((e) => e as String).toList(),
@@ -55,7 +52,6 @@ Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
       'reviews': instance.reviews,
       'returnPolicy': instance.returnPolicy,
       'minimumOrderQuantity': instance.minimumOrderQuantity,
-      'meta': instance.meta,
       'thumbnail': instance.thumbnail,
       'images': instance.images,
     };
