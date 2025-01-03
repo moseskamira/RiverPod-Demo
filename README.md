@@ -1,16 +1,41 @@
-# riverpod_project
+# Riverpod Demo
 
-A new Flutter project.
+## Prerequisites
 
-## Getting Started
+In order to be able to setup and run this application, the following need to be installed and setup
 
-This project is a starting point for a Flutter application.
+- [Flutter](https://docs.flutter.dev/get-started/install)
+- [Android Studio](https://developer.android.com/studio)
+- [VS Code](https://code.visualstudio.com/)
 
-A few resources to get you started if this is your first Flutter project:
+## Project Setup
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+To setup the project in your machine:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Clone the repo
+
+```console
+foo@bar:~$ git clone git@github.com:moseskamira/RiverPod-Demo.git
+```
+- CD into the repo and install the dependencies
+
+```console
+foo@bar:~$ cd RiverPod-Demo
+```
+
+```console
+foo@bar:~$ flutter pub get
+```
+
+- Run the build runner in all packages to generate required files
+
+```console
+dart run build_runner watch --delete-conflicting-outputs
+```
+## Project Implemented Concepts
+- Riverpod: Statement Management
+- Providers: State Management
+- GoRouters: Route Management
+- FirebaseFirestore: Data Storage and Retrieval
+- GetIt: For Dependency Injection
+- Localization & Internationalization
