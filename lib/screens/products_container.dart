@@ -23,8 +23,7 @@ class _DashboardContainerState extends ConsumerState<ProductsContainer> {
   @override
   Widget build(BuildContext context) {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-
-    final productsFuture = ref.watch(productsProvider);
+    final productsFuture = ref.watch(productsProvider.future);
     return Container(
       color: Colors.grey,
       child: SingleChildScrollView(
@@ -49,32 +48,36 @@ class _DashboardContainerState extends ConsumerState<ProductsContainer> {
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 20),
-                child: productsFuture.when(
-                    data: (products) {
-                      return Column(
-                        children: products
-                            .map(
-                              (product) => Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    if (context.mounted) {
-                                      context.push(RoutePath.productDetailsView,
-                                          extra: {
-                                            'prodId': product.id.toString()
-                                          });
-                                    }
-                                  },
-                                  child: ProductCard(product: product),
+                child: FutureBuilder(
+                    future: productsFuture,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      } else {
+                        return Column(
+                          children: snapshot.data!
+                              .map(
+                                (product) => Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (context.mounted) {
+                                        context.push(
+                                            RoutePath.productDetailsView,
+                                            extra: {
+                                              'prodId': product.id.toString()
+                                            });
+                                      }
+                                    },
+                                    child: ProductCard(product: product),
+                                  ),
                                 ),
-                              ),
-                            )
-                            .toList(),
-                      );
-                    },
-                    error: ((error, stackTrace) => Text(error.toString())),
-                    loading: () {
-                      return const Center(child: CircularProgressIndicator());
+                              )
+                              .toList(),
+                        );
+                      }
                     }),
               ),
             ),
