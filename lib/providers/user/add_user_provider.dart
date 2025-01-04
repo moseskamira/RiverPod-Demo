@@ -6,9 +6,7 @@ import '../../models/user.dart';
 class _AddUserNotifier extends StateNotifier<bool> {
   _AddUserNotifier() : super(false);
 
-  String postUser(User user) {
-    String successMsg = 'User Added Successfully';
-    state = true;
+  Future<void> postUser(User user) async {
     try {
       final fireStore = FirebaseFirestore.instance;
       final docRef = fireStore.collection('users').doc();
@@ -20,14 +18,10 @@ class _AddUserNotifier extends StateNotifier<bool> {
           'dob': user.dob,
         });
       });
-    } catch (_) {
-      successMsg = 'An error occurred';
-    }
-    state = false;
-    return successMsg;
+    } catch (_) {}
   }
 
-  bool get loading => state;
+  bool get isLoading => state;
 }
 
 final addUserProvider = StateNotifierProvider<_AddUserNotifier, bool>((ref) {

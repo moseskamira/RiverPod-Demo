@@ -77,7 +77,21 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                                 child: const Icon(Icons.error),
                               );
                             },
+                            frameBuilder: (BuildContext context, Widget child,
+                                int? frame, bool wasSynchronouslyLoaded) {
+                              if (wasSynchronouslyLoaded) {
+                                return child;
+                              }
+                              return AnimatedOpacity(
+                                opacity: frame == null ? 0 : 1,
+                                duration: const Duration(seconds: 1),
+                                curve: Curves.easeOut,
+                                child: child,
+                              );
+                            },
                             repeat: ImageRepeat.repeat,
+                            cacheHeight: 200,
+                            cacheWidth: 200,
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
