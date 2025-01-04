@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_project/screens/re_usable_widgets/product_card.dart';
@@ -21,6 +22,8 @@ class _DashboardContainerState extends ConsumerState<ProductsContainer> {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+
     final productsFuture = ref.watch(productsProvider);
     return Container(
       color: Colors.grey,
@@ -30,8 +33,8 @@ class _DashboardContainerState extends ConsumerState<ProductsContainer> {
             SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.3,
-              child: const Column(
-                children: [Text('My Reserved Section')],
+              child: Column(
+                children: [Text(appLocalizations.myReservedSection)],
               ),
             ),
             Container(
