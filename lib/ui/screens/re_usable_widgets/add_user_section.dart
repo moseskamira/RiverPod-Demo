@@ -1,9 +1,7 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:riverpod_project/ui/utils/reusable_functions.dart';
 
 import '../../../core/models/user.dart';
 import '../../../core/providers/user/add_user_provider.dart';
@@ -23,6 +21,7 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
   @override
   Widget build(BuildContext context) {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    isLoading = ref.watch(addUserProvider);
     return Form(
       key: _formKey,
       child: Padding(
@@ -107,47 +106,17 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState?.save();
-                          setState(() => isLoading = true);
                           FocusScope.of(context).unfocus();
                           await ref
                               .read(addUserProvider.notifier)
-                              .postUser(user)
-                              .then((_) {
-                            if (context.mounted) {
-                              final snackBar =
-                                  ReUsableFunctions.awesomeSnackBar(
-                                      appLocalizations.userAddedSuccessfully,
-                                      appLocalizations
-                                          .userHasBeenSubmittedSuccessfully,
-                                      ContentType.success,
-                                      context);
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(snackBar);
-                            }
-                          }).catchError((error) {
-                            setState(() => isLoading = false);
-                            if (context.mounted) {
-                              final snackBar =
-                                  ReUsableFunctions.awesomeSnackBar(
-                                      appLocalizations.errorOccurred,
-                                      error.toString(),
-                                      ContentType.failure,
-                                      context);
-                              ScaffoldMessenger.of(context)
-                                ..hideCurrentSnackBar()
-                                ..showSnackBar(snackBar);
-                            }
-                          }).whenComplete(() {
-                            setState(() => isLoading = false);
-                          });
+                              .postUser(user, context, appLocalizations);
                         }
                         if (context.mounted) {
                           FocusScope.of(context).unfocus();
                         }
                       },
                       child: Text(
-                        'Save User',
+                        appLocalizations.saveUser,
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
