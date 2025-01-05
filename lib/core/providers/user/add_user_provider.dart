@@ -10,7 +10,8 @@ import '../../models/user.dart';
 class _AddUserNotifier extends StateNotifier<bool> {
   _AddUserNotifier() : super(false);
 
-  postUser(User user, BuildContext context, AppLocalizations appLocal) {
+  postUser(User user, BuildContext context, AppLocalizations appLocal,
+      GlobalKey<FormState> formKey) {
     state = true;
     final fireStore = FirebaseFirestore.instance;
     final docRef = fireStore.collection('users').doc();
@@ -23,6 +24,7 @@ class _AddUserNotifier extends StateNotifier<bool> {
       });
     }).whenComplete(() {
       state = false;
+      formKey.currentState!.reset();
     }).onError((error, st) {
       state = false;
     }).then((_) {

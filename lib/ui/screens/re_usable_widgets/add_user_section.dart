@@ -105,11 +105,10 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          _formKey.currentState?.save();
+                          // _formKey.currentState?.save();
                           FocusScope.of(context).unfocus();
-                          await ref
-                              .read(addUserProvider.notifier)
-                              .postUser(user, context, appLocalizations);
+                          await ref.read(addUserProvider.notifier).postUser(
+                              user, context, appLocalizations, _formKey);
                         }
                         if (context.mounted) {
                           FocusScope.of(context).unfocus();
