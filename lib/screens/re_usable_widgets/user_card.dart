@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../models/user.dart';
 
@@ -9,29 +10,30 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Column(
       children: [
         Row(
           children: [
-            const Text('FirstName: '),
+            Text('${appLocalizations.firstName}: '),
             Text(user.firstName ?? ''),
           ],
         ),
         Row(
           children: [
-            const Text('LastName: '),
+            Text('${appLocalizations.lastName}: '),
             Text(user.lastName ?? ''),
           ],
         ),
         Row(
           children: [
-            const Text('Date of Birth: '),
+            Text('${appLocalizations.dob}: '),
             Text(user.dob ?? ''),
           ],
         ),
         Row(
           children: [
-            const Text('Gender: '),
+            Text('${appLocalizations.gender}: '),
             Text(user.gender ?? ''),
           ],
         ),
