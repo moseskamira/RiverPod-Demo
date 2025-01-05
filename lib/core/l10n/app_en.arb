@@ -21,5 +21,7 @@
   "userAddedSuccessfully": "User added successfully",
   "userHasBeenSubmittedSuccessfully": "User has been submitted successfully",
   "userDetails": "User Details",
-  "updateName": "Updated Name"
+  "updateName": "Updated Name",
+  "order": "Order",
+  "products": "Products"
 }

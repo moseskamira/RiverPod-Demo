@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_project/core/providers/navigation_notifier.dart';
+import 'package:riverpod_project/core/providers/app_nav_provider.dart';
 import 'package:riverpod_project/ui/screens/products_container.dart';
 import 'package:riverpod_project/ui/screens/user_container.dart';
 
@@ -21,12 +22,12 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final index = ref.watch(appNavigationNotifierProvider) as int;
+    final index = ref.watch(appNavProvider);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Products'),
+        title: Text(AppLocalizations.of(context)!.products),
         centerTitle: true,
       ),
       body: [
@@ -35,29 +36,27 @@ class _HomePageState extends ConsumerState<HomePage> {
         const UserContainer()
       ][index],
       bottomNavigationBar: NavigationBar(
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            selectedIcon: Icon(Icons.home),
-            icon: Icon(Icons.home_outlined),
-            label: 'Product',
+            selectedIcon: const Icon(Icons.home),
+            icon: const Icon(Icons.home_outlined),
+            label: AppLocalizations.of(context)!.product,
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.sd_card_alert_sharp),
-            icon: Icon(Icons.sd_card_alert_sharp),
-            label: 'Orders',
+            selectedIcon: const Icon(Icons.sd_card_alert_sharp),
+            icon: const Icon(Icons.sd_card_alert_sharp),
+            label: AppLocalizations.of(context)!.order,
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.person),
-            icon: Icon(Icons.person_2_outlined),
-            label: 'User',
+            selectedIcon: const Icon(Icons.person),
+            icon: const Icon(Icons.person_2_outlined),
+            label: AppLocalizations.of(context)!.user,
           ),
         ],
         selectedIndex: index,
         indicatorColor: Colors.deepPurple.shade200,
         onDestinationSelected: (value) {
-          ref
-              .read(appNavigationNotifierProvider.notifier)
-              .setSelectedIndex(value);
+          ref.read(appNavProvider.notifier).reset(value);
         },
       ),
     );
