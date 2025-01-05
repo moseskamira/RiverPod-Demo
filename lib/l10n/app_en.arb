@@ -1,9 +1,0 @@
-{
-"user":"User",
-"@user":{
-"description":"This is the user of the app"
-},
-"product":"product",
-"productDetails":"ProductDetails",
-  "myReservedSection": "My Reserved Section"
-}
