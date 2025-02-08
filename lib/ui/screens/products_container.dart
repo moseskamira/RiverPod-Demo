@@ -24,20 +24,21 @@ class _DashboardContainerState extends ConsumerState<ProductsContainer> {
   Widget build(BuildContext context) {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     final productsFuture = ref.watch(productsProvider.future);
+    final mediaQuerySize = MediaQuery.sizeOf(context);
     return Container(
       color: Colors.grey,
       child: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.3,
+              width: mediaQuerySize.width,
+              height: mediaQuerySize.height * 0.3,
               child: Column(
                 children: [Text(appLocalizations.myReservedSection)],
               ),
             ),
             Container(
-              width: MediaQuery.of(context).size.width,
+              width: mediaQuerySize.width,
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
@@ -53,31 +54,36 @@ class _DashboardContainerState extends ConsumerState<ProductsContainer> {
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
+                      }
+                      if (snapshot.hasError) {
                         return Text(snapshot.error.toString());
-                      } else {
-                        return Column(
-                          children: snapshot.data!
-                              .map(
-                                (product) => Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (context.mounted) {
-                                        context.push(
-                                            RoutePath.productDetailsView,
-                                            extra: {
-                                              'prodId': product.id.toString()
-                                            });
-                                      }
-                                    },
-                                    child: ProductCard(product: product),
-                                  ),
-                                ),
-                              )
-                              .toList(),
+                      }
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(
+                          child: Text('No products founds'),
                         );
                       }
+                      final products = snapshot.data!;
+                      return Column(
+                        children: products
+                            .map(
+                              (product) => Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    if (context.mounted) {
+                                      context.push(RoutePath.productDetailsView,
+                                          extra: {
+                                            'prodId': product.id.toString()
+                                          });
+                                    }
+                                  },
+                                  child: ProductCard(product: product),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      );
                     }),
               ),
             ),

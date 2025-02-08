@@ -6,29 +6,33 @@ import 'core/l10n/l10n.dart';
 import 'ui/app_routes/go_router.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String appTitle;
+  MyApp({super.key, required this.appTitle});
+
+  final ThemeData _appTheme = ThemeData(
+    colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+    useMaterial3: true,
+  );
+  static const List<LocalizationsDelegate> _localizationDelegates = [
+    AppLocalizations.delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+  ];
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Riverpod',
+      title: appTitle,
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
-      routerDelegate: router.routerDelegate,
-      routeInformationParser: router.routeInformationParser,
-      backButtonDispatcher: router.backButtonDispatcher,
-      routeInformationProvider: router.routeInformationProvider,
+      theme: _appTheme,
+      routerDelegate: appRouter.routerDelegate,
+      routeInformationParser: appRouter.routeInformationParser,
+      backButtonDispatcher: appRouter.backButtonDispatcher,
+      routeInformationProvider: appRouter.routeInformationProvider,
       supportedLocales: L10n.allLocals,
       locale: const Locale('en'),
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate
-      ],
+      localizationsDelegates: _localizationDelegates,
     );
   }
 }
