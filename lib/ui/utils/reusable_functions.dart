@@ -4,7 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ReUsableFunctions {
   static SnackBar awesomeSnackBar(
-      String? title, String message, type, BuildContext context) {
+      {required String title,
+      required String message,
+      required ContentType type,
+      required BuildContext context}) {
     return SnackBar(
       elevation: 0,
       behavior: SnackBarBehavior.floating,
@@ -27,5 +30,9 @@ class ReUsableFunctions {
         ),
       ),
     );
+  }
+
+  static TextStyle appStyle(double size, Color color, FontWeight fw) {
+    return GoogleFonts.poppins(color: color, fontSize: size, fontWeight: fw);
   }
 }

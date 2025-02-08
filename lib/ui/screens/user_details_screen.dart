@@ -67,7 +67,10 @@ class UserDetailsScreen extends ConsumerWidget {
                 if (result.isNotEmpty) {
                   Navigator.of(context).pop();
                   final snackBar = ReUsableFunctions.awesomeSnackBar(
-                      'User Details', result, ContentType.success, context);
+                      title: 'User Details',
+                      message: result,
+                      type: ContentType.success,
+                      context: context);
                   ScaffoldMessenger.of(context)
                     ..hideCurrentSnackBar()
                     ..showSnackBar(snackBar);

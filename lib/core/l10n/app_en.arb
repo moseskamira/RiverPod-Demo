@@ -23,5 +23,10 @@
   "userDetails": "User Details",
   "updateName": "Updated Name",
   "order": "Order",
-  "products": "Products"
+  "products": "Products",
+  "riverPodDemo": "RiverPod Demo",
+  "home": "Home",
+  "search": "Search",
+  "cart": "Cart",
+  "add": "Add"
 }

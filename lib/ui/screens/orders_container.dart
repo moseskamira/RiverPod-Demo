@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OrdersContainer extends ConsumerStatefulWidget {
-  const OrdersContainer({super.key});
+class SearchContainer extends ConsumerStatefulWidget {
+  const SearchContainer({super.key});
 
   @override
-  ConsumerState<OrdersContainer> createState() => _OrdersContainerState();
+  ConsumerState<SearchContainer> createState() => _SearchContainerState();
 }
 
-class _OrdersContainerState extends ConsumerState<OrdersContainer> {
+class _SearchContainerState extends ConsumerState<SearchContainer> {
   @override
   void initState() {
     super.initState();
