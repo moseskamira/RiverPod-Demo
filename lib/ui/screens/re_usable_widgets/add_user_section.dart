@@ -16,7 +16,38 @@ class AddUserSection extends ConsumerStatefulWidget {
 class _AddUserSectionState extends ConsumerState<AddUserSection> {
   final _formKey = GlobalKey<FormState>();
   final User user = User();
-  bool isLoading = false;
+  late bool isLoading;
+
+  Widget _buildTextField(BuildContext context, String hintText,
+      String labelText, Function(String) onChanged) {
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    return TextFormField(
+      decoration: InputDecoration(
+        hintText: hintText,
+        labelText: labelText,
+      ),
+      onChanged: onChanged,
+      validator: (value) => _validateField(
+        value,
+        labelText,
+        appLocalizations,
+      ),
+    );
+  }
+
+  String? _validateField(
+      String? value, String fieldName, AppLocalizations appLocalizations) {
+    if (value == null || value.isEmpty) {
+      return appLocalizations.provideMissingFields;
+    }
+    return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    isLoading = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,68 +60,32 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
         child: Column(
           children: [
             Text(appLocalizations.kindlyFillTheFormBelow),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: appLocalizations.enterFirstName,
-                labelText: appLocalizations.firstName,
-              ),
-              onChanged: (String value) {
-                user.firstName = value.trim();
-              },
-              onSaved: (String? value) {},
-              validator: (String? value) {
-                return value == null || value.isEmpty
-                    ? appLocalizations.provideMissingFields
-                    : null;
-              },
+            _buildTextField(
+              context,
+              appLocalizations.enterFirstName,
+              appLocalizations.firstName,
+              (value) => user.firstName = value.trim(),
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: appLocalizations.enterLastName,
-                labelText: appLocalizations.lastName,
-              ),
-              onChanged: (String value) {
-                user.lastName = value.trim();
-              },
-              onSaved: (String? value) {},
-              validator: (String? value) {
-                return value == null || value.isEmpty
-                    ? appLocalizations.provideMissingFields
-                    : null;
-              },
+            _buildTextField(
+              context,
+              appLocalizations.enterLastName,
+              appLocalizations.lastName,
+              (value) => user.lastName = value.trim(),
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: appLocalizations.enterGender,
-                labelText: appLocalizations.gender,
-              ),
-              onChanged: (String value) {
-                user.gender = value.trim();
-              },
-              onSaved: (String? value) {},
-              validator: (String? value) {
-                return value == null || value.isEmpty
-                    ? appLocalizations.provideMissingFields
-                    : null;
-              },
+            _buildTextField(
+              context,
+              appLocalizations.enterGender,
+              appLocalizations.gender,
+              (value) => user.gender = value.trim(),
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: appLocalizations.enterDOB,
-                labelText: appLocalizations.dob,
-              ),
-              onChanged: (String value) {
-                user.dob = value.trim();
-              },
-              onSaved: (String? value) {},
-              validator: (String? value) {
-                return value == null || value.isEmpty
-                    ? appLocalizations.provideMissingFields
-                    : null;
-              },
+            _buildTextField(
+              context,
+              appLocalizations.enterDOB,
+              appLocalizations.dob,
+              (value) => user.dob = value.trim(),
             ),
             const SizedBox(height: 10),
-            isLoading == true
+            isLoading
                 ? Center(
                     child: CircularProgressIndicator(
                       color: Theme.of(context).primaryColor,
@@ -102,15 +97,17 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
+                        side: const BorderSide(color: Colors.blue, width: 2),
                       ),
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           FocusScope.of(context).unfocus();
                           await ref.read(addUserProvider.notifier).postUser(
-                              user, context, appLocalizations, _formKey);
-                        }
-                        if (context.mounted) {
-                          FocusScope.of(context).unfocus();
+                                user,
+                                context,
+                                appLocalizations,
+                                _formKey,
+                              );
                         }
                       },
                       child: Text(
