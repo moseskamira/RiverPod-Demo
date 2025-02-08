@@ -10,11 +10,16 @@ import '../../models/user.dart';
 class _AddUserNotifier extends StateNotifier<bool> {
   _AddUserNotifier() : super(false);
 
-  postUser(User user, BuildContext context, AppLocalizations appLocal) {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Future<void> postUser(User user, BuildContext context,
+      AppLocalizations appLocal, GlobalKey<FormState> formKey) async {
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
     state = true;
-    final fireStore = FirebaseFirestore.instance;
-    final docRef = fireStore.collection('users').doc();
-    fireStore.runTransaction((transaction) async {
+    final docRef = _firestore.collection('users').doc();
+    await _firestore.runTransaction((transaction) async {
       transaction.set(docRef, {
         'firstName': user.firstName,
         'lastName': user.lastName,
@@ -23,6 +28,7 @@ class _AddUserNotifier extends StateNotifier<bool> {
       });
     }).whenComplete(() {
       state = false;
+      formKey.currentState!.reset();
     }).onError((error, st) {
       state = false;
     }).then((_) {
