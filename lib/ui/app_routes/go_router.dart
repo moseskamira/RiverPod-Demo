@@ -8,7 +8,23 @@ import '../screens/product_detail_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
-final router = GoRouter(navigatorKey: _rootNavigatorKey, routes: [
+Map<String, dynamic>? _getStateExtras(GoRouterState state) {
+  return state.extra as Map<String, dynamic>?;
+}
+
+Widget _productDetailsBuilder(_, GoRouterState state) {
+  final stateExtras = _getStateExtras(state);
+  final prodId = stateExtras?['prodId'];
+  return ProductDetailPage(prodId);
+}
+
+Widget _userDetailsBuilder(_, GoRouterState state) {
+  final stateExtras = _getStateExtras(state);
+  var userId = stateExtras?['userId'];
+  return UserDetailsScreen(userId);
+}
+
+final appRouter = GoRouter(navigatorKey: _rootNavigatorKey, routes: [
   GoRoute(
     name: "homeView",
     path: RoutePath.homeView,
@@ -17,19 +33,11 @@ final router = GoRouter(navigatorKey: _rootNavigatorKey, routes: [
   GoRoute(
     name: "productDetailsView",
     path: RoutePath.productDetailsView,
-    builder: (context, state) {
-      var stateExtrasMap = state.extra as Map<String, dynamic>?;
-      var prodId = stateExtrasMap?['prodId'];
-      return ProductDetailPage(prodId);
-    },
+    builder: _productDetailsBuilder,
   ),
   GoRoute(
     name: 'userDetailsView',
     path: RoutePath.userDetailsView,
-    builder: (context, state) {
-      var stateExtrasMap = state.extra as Map<String, dynamic>?;
-      var userId = stateExtrasMap?['userId'];
-      return UserDetailsScreen(userId);
-    },
+    builder: _userDetailsBuilder,
   )
 ]);

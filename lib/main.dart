@@ -5,13 +5,15 @@ import 'package:riverpod_project/core/locator/locator.dart';
 
 import 'my_app.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   setUp();
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+    ProviderScope(
+      child: MyApp(
+        appTitle: 'RiverPod Demo',
+      ),
     ),
   );
 }
