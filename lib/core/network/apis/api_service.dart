@@ -7,9 +7,22 @@ import 'apis.dart';
 
 class ApiService {
   String baseUrl = 'https://dummyjson.com/';
+  String baseUrl2 = 'https://fakestoreapi.com/';
 
   Future<List<ProductModel>> fetchProducts() async {
     Response response = await get(Uri.parse('$baseUrl${Apis.products}'));
+    if (response.statusCode == 200) {
+      final List result = jsonDecode(response.body)['products'];
+      return result
+          .map((jsonValues) => ProductModel.fromJson(jsonValues))
+          .toList();
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<List<ProductModel>> getProducts() async {
+    Response response = await get(Uri.parse('$baseUrl2${Apis.products}'));
     if (response.statusCode == 200) {
       final List result = jsonDecode(response.body)['products'];
       return result

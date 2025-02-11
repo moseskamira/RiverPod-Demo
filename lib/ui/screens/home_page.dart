@@ -1,7 +1,9 @@
+import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_project/core/providers/app_nav_provider.dart';
+import 'package:riverpod_project/core/providers/main_page_provider.dart';
+import 'package:riverpod_project/ui/screens/dashboard_container.dart';
 import 'package:riverpod_project/ui/screens/products_container.dart';
 import 'package:riverpod_project/ui/screens/user_container.dart';
 
@@ -15,50 +17,76 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  @override
-  void initState() {
-    super.initState();
+  Widget _getBodyContent(int index) {
+    switch (index) {
+      case 0:
+        return const DashboardContainer();
+      case 1:
+        return const SearchContainer();
+      case 2:
+        return const DashboardContainer();
+      case 3:
+        return const UserContainer();
+      default:
+        return const ProductsContainer();
+    }
+  }
+
+  NavigationBar _buildBottomNavigationBar(int index) {
+    final localizedStrings = AppLocalizations.of(context)!;
+    final List<NavigationDestination> destinations = [
+      NavigationDestination(
+        selectedIcon: const Icon(CommunityMaterialIcons.home),
+        icon: const Icon(Icons.home_outlined),
+        label: localizedStrings.home,
+      ),
+      NavigationDestination(
+        selectedIcon: const Icon(CommunityMaterialIcons.search_web),
+        icon: const Icon(Icons.search),
+        label: localizedStrings.search,
+      ),
+      NavigationDestination(
+        selectedIcon: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: localizedStrings.add,
+      ),
+      NavigationDestination(
+        selectedIcon: const Icon(CommunityMaterialIcons.cart),
+        icon: const Icon(Icons.add_shopping_cart),
+        label: localizedStrings.cart,
+      ),
+      NavigationDestination(
+        selectedIcon: const Icon(Icons.person),
+        icon: const Icon(Icons.person_2_outlined),
+        label: localizedStrings.user,
+      ),
+    ];
+
+    return NavigationBar(
+      destinations: destinations,
+      selectedIndex: index,
+      indicatorColor: Colors.deepPurple.shade200,
+      onDestinationSelected: (value) {
+        ref.read(mainPageProvider.notifier).setTabIndex(value);
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final index = ref.watch(appNavProvider);
+    final tabIndex = ref.watch(mainPageProvider).tabIndex;
+    final localizedStrings = AppLocalizations.of(context)!;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(AppLocalizations.of(context)!.products),
+        title: Text(
+          localizedStrings.riverPodDemo,
+        ),
         centerTitle: true,
       ),
-      body: [
-        const ProductsContainer(),
-        const OrdersContainer(),
-        const UserContainer()
-      ][index],
-      bottomNavigationBar: NavigationBar(
-        destinations: [
-          NavigationDestination(
-            selectedIcon: const Icon(Icons.home),
-            icon: const Icon(Icons.home_outlined),
-            label: AppLocalizations.of(context)!.product,
-          ),
-          NavigationDestination(
-            selectedIcon: const Icon(Icons.sd_card_alert_sharp),
-            icon: const Icon(Icons.sd_card_alert_sharp),
-            label: AppLocalizations.of(context)!.order,
-          ),
-          NavigationDestination(
-            selectedIcon: const Icon(Icons.person),
-            icon: const Icon(Icons.person_2_outlined),
-            label: AppLocalizations.of(context)!.user,
-          ),
-        ],
-        selectedIndex: index,
-        indicatorColor: Colors.deepPurple.shade200,
-        onDestinationSelected: (value) {
-          ref.read(appNavProvider.notifier).reset(value);
-        },
-      ),
+      body: _getBodyContent(tabIndex),
+      bottomNavigationBar: _buildBottomNavigationBar(tabIndex),
     );
   }
 }

@@ -16,7 +16,6 @@ class AddUserSection extends ConsumerStatefulWidget {
 class _AddUserSectionState extends ConsumerState<AddUserSection> {
   final _formKey = GlobalKey<FormState>();
   final User user = User();
-  late bool isLoading;
 
   Widget _buildTextField(BuildContext context, String hintText,
       String labelText, Function(String) onChanged) {
@@ -46,13 +45,12 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
   @override
   void initState() {
     super.initState();
-    isLoading = false;
   }
 
   @override
   Widget build(BuildContext context) {
     AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-    isLoading = ref.watch(addUserProvider);
+    final isLoading = ref.watch(addUserProvider);
     return Form(
       key: _formKey,
       child: Padding(
@@ -85,7 +83,7 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
               (value) => user.dob = value.trim(),
             ),
             const SizedBox(height: 10),
-            isLoading
+            isLoading == AddUserState.loading
                 ? Center(
                     child: CircularProgressIndicator(
                       color: Theme.of(context).primaryColor,
@@ -102,12 +100,15 @@ class _AddUserSectionState extends ConsumerState<AddUserSection> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           FocusScope.of(context).unfocus();
-                          await ref.read(addUserProvider.notifier).postUser(
-                                user,
-                                context,
-                                appLocalizations,
-                                _formKey,
-                              );
+                          await Future.wait<void>([
+                            ref.read(addUserProvider.notifier).postUser(
+                                  user,
+                                  context,
+                                  appLocalizations,
+                                )
+                          ]).then((_) {
+                            _formKey.currentState!.reset();
+                          });
                         }
                       },
                       child: Text(

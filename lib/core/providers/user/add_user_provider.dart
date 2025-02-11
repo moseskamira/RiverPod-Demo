@@ -7,17 +7,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../ui/utils/reusable_functions.dart';
 import '../../models/user.dart';
 
-class _AddUserNotifier extends StateNotifier<bool> {
-  _AddUserNotifier() : super(false);
+enum AddUserState { idle, loading, success, error }
 
+class AddUserNotifier extends StateNotifier<AddUserState> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> postUser(User user, BuildContext context,
-      AppLocalizations appLocal, GlobalKey<FormState> formKey) async {
-    if (!formKey.currentState!.validate()) {
-      return;
-    }
-    state = true;
+  AddUserNotifier() : super(AddUserState.idle);
+
+  Future<void> postUser(
+    User user,
+    BuildContext context,
+    AppLocalizations appLocal,
+  ) async {
+    state = AddUserState.loading;
     final docRef = _firestore.collection('users').doc();
     await _firestore.runTransaction((transaction) async {
       transaction.set(docRef, {
@@ -27,25 +29,42 @@ class _AddUserNotifier extends StateNotifier<bool> {
         'dob': user.dob,
       });
     }).whenComplete(() {
-      state = false;
-      formKey.currentState!.reset();
-    }).onError((error, st) {
-      state = false;
-    }).then((_) {
+      state = AddUserState.success;
       if (context.mounted) {
-        final snackBar = ReUsableFunctions.awesomeSnackBar(
-            appLocal.userAddedSuccessfully,
-            appLocal.userHasBeenSubmittedSuccessfully,
-            ContentType.success,
-            context);
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
+        _showSnackBar(
+          appLocal.userAddedSuccessfully,
+          'User has been successfully created',
+          ContentType.success,
+          context,
+        );
+      }
+    }).onError((error, _) {
+      state = AddUserState.error;
+      if (context.mounted) {
+        _showSnackBar(
+          'Error',
+          'Unable to create new user',
+          ContentType.failure,
+          context,
+        );
       }
     });
   }
+
+  void _showSnackBar(String title, String message, ContentType contentType,
+      BuildContext context) {
+    final snackBar = ReUsableFunctions.awesomeSnackBar(
+      title: title,
+      message: message,
+      type: contentType,
+      context: context,
+    );
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
 }
 
-final addUserProvider = StateNotifierProvider<_AddUserNotifier, bool>((ref) {
-  return _AddUserNotifier();
-});
+final addUserProvider = StateNotifierProvider<AddUserNotifier, AddUserState>(
+  (ref) => AddUserNotifier(),
+);
