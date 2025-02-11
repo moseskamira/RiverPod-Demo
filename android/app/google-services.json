@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:663637680212:android:a27eab83ca8687a5254dc1",
         "android_client_info": {
-          "package_name": "com.example.riverpod_project"
+          "package_name": "co.ishop.riverpod_project"
         }
       },
       "oauth_client": [],
