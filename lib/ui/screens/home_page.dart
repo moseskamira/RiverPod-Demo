@@ -4,10 +4,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_project/core/providers/main_page_provider.dart';
 import 'package:riverpod_project/ui/screens/dashboard_container.dart';
-import 'package:riverpod_project/ui/screens/products_container.dart';
 import 'package:riverpod_project/ui/screens/user_container.dart';
 
-import 'orders_container.dart';
+import 'cart_container.dart';
+import 'search_container.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -24,11 +24,11 @@ class _HomePageState extends ConsumerState<HomePage> {
       case 1:
         return const SearchContainer();
       case 2:
-        return const DashboardContainer();
+        return const SearchContainer();
       case 3:
-        return const UserContainer();
+        return const CartContainer();
       default:
-        return const ProductsContainer();
+        return const UserContainer();
     }
   }
 

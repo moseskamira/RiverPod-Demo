@@ -187,7 +187,7 @@ class _DashboardContainerState extends ConsumerState<DashboardContainer>
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48),
+          preferredSize: const Size.fromHeight(40),
           child: FutureBuilder<List<ProductModel>>(
             future: productsFuture,
             builder: (context, snapshot) {
