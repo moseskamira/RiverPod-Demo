@@ -22,12 +22,11 @@ class _DashboardContainerState extends ConsumerState<DashboardContainer>
   final ScrollController _scrollController = ScrollController();
   late TabController _tabController;
   List<String> categoryList = [];
-  bool isFirstBuild = true;
   int productIndex = 0;
 
   void _onScroll() {
     if (_scrollController.hasClients) {
-      int newIndex = (_scrollController.offset / 150).round();
+      int newIndex = (_scrollController.offset / 260).round();
       if (newIndex != productIndex) {
         setState(() {
           productIndex = newIndex;
@@ -119,13 +118,15 @@ class _DashboardContainerState extends ConsumerState<DashboardContainer>
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.grey),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+      child: const Padding(
+        padding: EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Latest Shoes',
-                style: TextStyle(color: Colors.black, fontSize: 18)),
+            Text(
+              'More Images',
+              style: TextStyle(color: Colors.black, fontSize: 18),
+            ),
             Row(
               children: [
                 Text('See All'),
@@ -157,7 +158,7 @@ class _DashboardContainerState extends ConsumerState<DashboardContainer>
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black38,
                     blurRadius: 0.8,
@@ -186,7 +187,7 @@ class _DashboardContainerState extends ConsumerState<DashboardContainer>
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(48),
+          preferredSize: const Size.fromHeight(48),
           child: FutureBuilder<List<ProductModel>>(
             future: productsFuture,
             builder: (context, snapshot) {
@@ -204,13 +205,13 @@ class _DashboardContainerState extends ConsumerState<DashboardContainer>
                   .toSet()
                   .toList();
 
-              if (isFirstBuild || categoryList.length != categories.length) {
+              if (categoryList.length != categories.length) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   setState(() {
                     categoryList = categories;
+                    _tabController.dispose();
                     _tabController =
                         TabController(length: categoryList.length, vsync: this);
-                    isFirstBuild = false;
                   });
                 });
               }
@@ -234,9 +235,9 @@ class _DashboardContainerState extends ConsumerState<DashboardContainer>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: categoryList.map((category) {
-          return _buildProductList(category, productsFuture);
-        }).toList(),
+        children: categoryList
+            .map((category) => _buildProductList(category, productsFuture))
+            .toList(),
       ),
     );
   }

@@ -1,9 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
+import 'package:riverpod_project/core/providers/product/product_index_provider.dart';
+import 'package:riverpod_project/ui/utils/reusable_functions.dart';
 
-import '../../core/models/product_model.dart';
 import '../../core/providers/product/product_detail_provider.dart';
 
 class ProductDetailPage extends ConsumerStatefulWidget {
@@ -16,236 +19,336 @@ class ProductDetailPage extends ConsumerStatefulWidget {
 }
 
 class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
+  late PageController _pageController;
+  bool isSelected = false;
+
   @override
   void initState() {
     super.initState();
+    final initialIndex = ref.read(productIndexProvider).pageIndex;
+    _pageController = PageController(initialPage: initialIndex);
+  }
+
+  void isSelectedFunc(int ind, List<dynamic> list, bool sel) {
+    for (int i = 0; i < list.length; i++) {
+      if (i == ind) {
+        list[i]['selected'] = sel;
+        setState(() {});
+      } else {
+        isSelected = false;
+        setState(() {});
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final productFuture = ref.watch(productDetailProvider(widget.id).future);
+    final imageIndex = ref.watch(productIndexProvider).pageIndex;
+    final List<dynamic> sizeList = [
+      {'size': '20', 'selected': false},
+      {'size': '30', 'selected': false},
+      {'size': '40', 'selected': false},
+      {'size': '50', 'selected': false}
+    ];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(AppLocalizations.of(context)!.productDetails),
         centerTitle: true,
       ),
-      body: Container(
-        color: Colors.grey,
-        child: Container(
-          width: MediaQuery.sizeOf(context).width,
-          height: MediaQuery.sizeOf(context).height,
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            ),
-            color: Colors.white,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FutureBuilder(
-              future: ref.watch(productDetailProvider(widget.id).future),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  if (snapshot.hasData) {
-                    var productModel = snapshot.data as ProductModel;
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Image.network(
-                            '${productModel.thumbnail}',
-                            fit: BoxFit.cover,
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
+      body: FutureBuilder(
+        future: productFuture,
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (!snapshot.hasData) {
+            return const Center(child: Text('No product found'));
+          }
+          final product = snapshot.data!;
+          final imagesList = product.images ?? [];
+
+          return CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                automaticallyImplyLeading: false,
+                leadingWidth: 0,
+                title: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            context.pop();
+                          },
+                          child: const Icon(Icons.close)),
+                      const Icon(Icons.more_horiz),
+                    ],
+                  ),
+                ),
+                pinned: true,
+                floating: true,
+                expandedHeight: MediaQuery.sizeOf(context).height,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Stack(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.sizeOf(context).height * 0.4,
+                        width: MediaQuery.sizeOf(context).width,
+                        child: PageView.builder(
+                          controller: _pageController,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: imagesList.length,
+                          onPageChanged: (page) {
+                            ref
+                                .read(productIndexProvider.notifier)
+                                .setPageIndex(page);
+                          },
+                          itemBuilder: (context, index) {
+                            return Stack(
+                              children: [
+                                Container(
+                                  color: Colors.grey.shade300,
+                                  height:
+                                      MediaQuery.sizeOf(context).height * 0.39,
+                                  width: MediaQuery.sizeOf(context).width,
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  child: CachedNetworkImage(
+                                    imageUrl: imagesList[index],
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              );
-                            },
-                            errorBuilder: (context, error, st) {
-                              return Container(
-                                color: Colors.grey,
-                                width: 100,
-                                height: 100,
-                                child: const Icon(Icons.error),
-                              );
-                            },
-                            frameBuilder: (BuildContext context, Widget child,
-                                int? frame, bool wasSynchronouslyLoaded) {
-                              if (wasSynchronouslyLoaded) {
-                                return child;
-                              }
-                              return AnimatedOpacity(
-                                opacity: frame == null ? 0 : 1,
-                                duration: const Duration(seconds: 1),
-                                curve: Curves.easeOut,
-                                child: child,
-                              );
-                            },
-                            repeat: ImageRepeat.repeat,
-                            cacheHeight: 200,
-                            cacheWidth: 200,
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Title: ',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              ),
-                              Flexible(
-                                  child: Text(
-                                '${productModel.title}',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              )),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Description: ',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              ),
-                              Flexible(
-                                child: Text(
-                                  '${productModel.description}',
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
-                                      color: Colors.black),
+                                Positioned(
+                                  top: MediaQuery.sizeOf(context).height * 0.09,
+                                  right: 10,
+                                  child: const Icon(
+                                    Icons.heart_broken_rounded,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Category: ',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              ),
-                              Flexible(
-                                  child: Text(
-                                '${productModel.category}',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              )),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Price: ',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              ),
-                              Flexible(
-                                  child: Text(
-                                '${productModel.price}',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              )),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Stock: ',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              ),
-                              Flexible(
-                                  child: Text(
-                                '${productModel.stock}',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              )),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Brand: ',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              ),
-                              Flexible(
-                                  child: Text(
-                                '${productModel.brand}',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              )),
-                            ],
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Weight: ',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              ),
-                              Flexible(
-                                  child: Text(
-                                '${productModel.weight}',
-                                style: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 16,
-                                    color: Colors.black),
-                              )),
-                            ],
-                          ),
-                        ],
+                                Positioned(
+                                  bottom: 20,
+                                  left: 0,
+                                  right: 0,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(
+                                      imagesList.length,
+                                      (dotIndex) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 4,
+                                        ),
+                                        child: CircleAvatar(
+                                          radius: 4,
+                                          backgroundColor:
+                                              imageIndex == dotIndex
+                                                  ? Colors.blue
+                                                  : Colors.grey,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
-                    );
-                  } else {
-                    throw Exception('');
-                  }
-                }
-              },
-            ),
-          ),
-        ),
+                      Positioned(
+                        bottom: -30,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
+                          ),
+                          child: Container(
+                            height: MediaQuery.sizeOf(context).height * 0.645,
+                            width: MediaQuery.sizeOf(context).width,
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '${product.title}',
+                                    style: ReUsableFunctions.appStyle(
+                                        28, Colors.black, FontWeight.w600),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '${product.category}',
+                                        style: ReUsableFunctions.appStyle(
+                                            18, Colors.black, FontWeight.w400),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      RatingBar.builder(
+                                          initialRating: 4,
+                                          minRating: 1,
+                                          maxRating: 5,
+                                          itemCount: 5,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: true,
+                                          itemSize: 18,
+                                          itemPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 1,
+                                          ),
+                                          itemBuilder: (context, _) =>
+                                              const Icon(
+                                                Icons.star,
+                                                size: 18,
+                                                color: Colors.black,
+                                              ),
+                                          onRatingUpdate: (rating) {
+                                            print('MYRATINGIS: $rating');
+                                          }),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '\$${product.price}',
+                                        style: ReUsableFunctions.appStyle(
+                                            18, Colors.black, FontWeight.w600),
+                                      ),
+                                      const Row(
+                                        children: [
+                                          Text('Colors'),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          CircleAvatar(
+                                            radius: 7,
+                                            backgroundColor: Colors.black,
+                                          ),
+                                          CircleAvatar(
+                                            radius: 7,
+                                            backgroundColor: Colors.orange,
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(),
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Text('Selected Size'),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            'View Size Guide',
+                                            style: ReUsableFunctions.appStyle(
+                                                14,
+                                                Colors.grey,
+                                                FontWeight.w400),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10),
+                                      SizedBox(
+                                        height: 50,
+                                        child: ListView.builder(
+                                            itemCount: sizeList.length,
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (ctx, index) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: ChoiceChip(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      80,
+                                                    ),
+                                                  ),
+                                                  disabledColor: Colors.white,
+                                                  label: Text(
+                                                    sizeList[index]['size'],
+                                                  ),
+                                                  selected: sizeList[index]
+                                                      ['selected'],
+                                                  onSelected: (newState) {
+                                                    print(
+                                                        'MYVALUEIS: ${newState}');
+                                                    // isSelected = newState;
+                                                    // setState(() {});
+                                                    isSelectedFunc(index,
+                                                        sizeList, newState);
+                                                  },
+                                                ),
+                                              );
+                                            }),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      const Divider(
+                                        color: Colors.black,
+                                        height: 1,
+                                        indent: 10,
+                                        endIndent: 10,
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        '${product.description}',
+                                        textAlign: TextAlign.justify,
+                                        maxLines: 4,
+                                        style: ReUsableFunctions.appStyle(
+                                            12, Colors.black, FontWeight.w400),
+                                      ),
+                                      SizedBox(height: 10),
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: GestureDetector(
+                                          onTap: () {},
+                                          child: Padding(
+                                            padding: EdgeInsets.all(10),
+                                            child: Container(
+                                              height: 30,
+                                              width: MediaQuery.sizeOf(context)
+                                                      .width *
+                                                  0.4,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Center(
+                                                  child: Text(
+                                                'Checkout',
+                                                style:
+                                                    ReUsableFunctions.appStyle(
+                                                        12,
+                                                        Colors.white,
+                                                        FontWeight.w400),
+                                              )),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
