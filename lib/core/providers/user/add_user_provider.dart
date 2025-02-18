@@ -10,9 +10,11 @@ import '../../models/user.dart';
 enum AddUserState { idle, loading, success, error }
 
 class AddUserNotifier extends StateNotifier<AddUserState> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _fireStore;
 
-  AddUserNotifier() : super(AddUserState.idle);
+  AddUserNotifier({FirebaseFirestore? fireStore})
+      : _fireStore = fireStore ?? FirebaseFirestore.instance,
+        super(AddUserState.idle);
 
   Future<void> postUser(
     User user,
@@ -20,8 +22,8 @@ class AddUserNotifier extends StateNotifier<AddUserState> {
     AppLocalizations appLocal,
   ) async {
     state = AddUserState.loading;
-    final docRef = _firestore.collection('users').doc();
-    await _firestore.runTransaction((transaction) async {
+    final docRef = _fireStore.collection('users').doc();
+    await _fireStore.runTransaction((transaction) async {
       transaction.set(docRef, {
         'firstName': user.firstName,
         'lastName': user.lastName,
